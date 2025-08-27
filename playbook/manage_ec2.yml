@@ -1,0 +1,13 @@
+---
+- name: Manage EC2 instances based on private IPs
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Print instance IPs and tags
+      debug:
+        msg: "Managing instance with IP: {{ inventory_hostname }}"
+
+    - name: Import tasks for instance configuration
+      import_tasks: ../tasks/main.yml
+      become: true
+

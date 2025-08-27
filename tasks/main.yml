@@ -1,0 +1,43 @@
+---
+- name: Set hostname based on tags
+  ansible.builtin.hostname:
+    name: "{{ hostvars[inventory_hostname].tags.Name }}"
+
+- name: Install service
+  ansible.builtin.dnf:
+    name: "{{ hostvars[inventory_hostname].tags.Service }}{{ hostvars[inventory_hostname].tags.Version }}"
+    allow_downgrade: true
+    state: present
+
+- name: Start and enable service
+  vars:
+    mariadb_service: "mariadb"
+  ansible.builtin.service:
+    name: "{{ mariadb_service if 'mariadb' in hostvars[inventory_hostname].tags.Service else hostvars[inventory_hostname].tags.Service }}"
+    state: started
+    enabled: yes
+
+- name: Ensure cronie is installed
+  ansible.builtin.package:
+    name: "cronie"
+    state: present
+
+- name: Start and enable cronie
+  ansible.builtin.service:
+    name: crond
+    state: started
+    enabled: yes
+
+- name: Create a cron job for server restart
+  vars:
+    restart_tag: "{{ hostvars[inventory_hostname].tags.Restart }}"
+    tag_time: "{{ restart_tag.split(':')[1] }}"
+  ansible.builtin.cron:
+    name: restart server
+    #weekday: "{{ restart_tag.split(':')[0] }}"
+    #minute: "{{ tag_time.split(':')[1] }}"
+    #hour: "{{ tag_time.split(':')[0] }}"
+    user: root
+    job: "/sbin/shutdown -r now"
+    cron_file: ansible_restart_server
+

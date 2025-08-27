@@ -1,0 +1,10 @@
+plugin: amazon.aws.aws_ec2
+regions:
+  - us-east-1
+hostnames:
+  - private-ip-address
+filters:
+  instance-state-name: running
+  private-ip-address:
+    - 10.0.1.38
+    - 10.0.1.58
