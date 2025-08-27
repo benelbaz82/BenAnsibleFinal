@@ -6,5 +6,5 @@ hostnames:
 filters:
   instance-state-name: running
   private-ip-address:
-    - 10.0.1.38
-    - 10.0.1.58
+    - 10.0.1.15
+    - 10.0.1.82

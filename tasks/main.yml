@@ -34,9 +34,6 @@
     tag_time: "{{ restart_tag.split(':')[1] }}"
   ansible.builtin.cron:
     name: restart server
-    #weekday: "{{ restart_tag.split(':')[0] }}"
-    #minute: "{{ tag_time.split(':')[1] }}"
-    #hour: "{{ tag_time.split(':')[0] }}"
     user: root
     job: "/sbin/shutdown -r now"
     cron_file: ansible_restart_server
